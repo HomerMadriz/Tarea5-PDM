@@ -1,5 +1,7 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, avoid_unnecessary_containers
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:special_counter/Providers/counter.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,13 +18,17 @@ class HomePage extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.70,
             margin: EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: context.watch<Counter>().getCurrentColor,
               borderRadius: BorderRadius.circular(15.0),
             ),
             child: Center(
-              child: Text(
-                "0",
-                style: TextStyle(fontSize: 72),
+              child: Consumer<Counter>(
+                builder: (context, counter, child) {
+                  return Text(
+                    counter.getCount.toString(),
+                    style: TextStyle(fontSize: 72, color: counter.getFontColor),
+                  );
+                },
               ),
             ),
           ),
@@ -35,7 +41,12 @@ class HomePage extends StatelessWidget {
                   style: TextStyle(color: Colors.grey[200]),
                 ),
                 color: Colors.black87,
-                onPressed: () {},
+                onPressed: () {
+                  context.read<Counter>().setColor('black');
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Cambiando a color negro...'),
+                  ));
+                },
               ),
               MaterialButton(
                 child: Text(
@@ -43,7 +54,13 @@ class HomePage extends StatelessWidget {
                   style: TextStyle(color: Colors.grey[200]),
                 ),
                 color: Colors.red,
-                onPressed: () {},
+                onPressed: () {
+                  context.read<Counter>().setColor('red');
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Cambiando a color rojo...'),
+                    backgroundColor: context.read<Counter>().getCurrentColor,
+                  ));
+                },
               ),
               MaterialButton(
                 child: Text(
@@ -51,7 +68,13 @@ class HomePage extends StatelessWidget {
                   style: TextStyle(color: Colors.grey[200]),
                 ),
                 color: Colors.blue,
-                onPressed: () {},
+                onPressed: () {
+                  context.read<Counter>().setColor('blue');
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Cambiando a color azul...'),
+                    backgroundColor: context.read<Counter>().getCurrentColor,
+                  ));
+                },
               ),
               MaterialButton(
                 child: Text(
@@ -59,7 +82,13 @@ class HomePage extends StatelessWidget {
                   style: TextStyle(color: Colors.grey[200]),
                 ),
                 color: Colors.green,
-                onPressed: () {},
+                onPressed: () {
+                  context.read<Counter>().setColor('green');
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Cambiando a color verde...'),
+                    backgroundColor: context.read<Counter>().getCurrentColor,
+                  ));
+                },
               ),
             ],
           ),
@@ -74,7 +103,9 @@ class HomePage extends StatelessWidget {
                   tooltip: "Sumar 1 cuenta",
                   icon: Icon(Icons.add),
                   color: Colors.grey[200],
-                  onPressed: () {},
+                  onPressed: () {
+                    context.read<Counter>().increment();
+                  },
                 ),
               ),
               CircleAvatar(
@@ -84,7 +115,9 @@ class HomePage extends StatelessWidget {
                   tooltip: "Restar 1 cuenta",
                   icon: Icon(Icons.remove),
                   color: Colors.grey[200],
-                  onPressed: () {},
+                  onPressed: () {
+                    context.read<Counter>().decrement();
+                  },
                 ),
               ),
               CircleAvatar(
@@ -94,7 +127,9 @@ class HomePage extends StatelessWidget {
                   tooltip: "Reiniciar cuenta",
                   icon: Icon(Icons.restart_alt),
                   color: Colors.grey[200],
-                  onPressed: () {},
+                  onPressed: () {
+                    context.read<Counter>().reset();
+                  },
                 ),
               ),
             ],
